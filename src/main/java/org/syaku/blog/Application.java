@@ -4,6 +4,7 @@ package org.syaku.blog;
  * @author Seok Kyun. Choi. 최석균 (Syaku)
  * @since 2018. 10. 9.
  */
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
