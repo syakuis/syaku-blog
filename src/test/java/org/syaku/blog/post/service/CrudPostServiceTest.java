@@ -37,9 +37,4 @@ public class CrudPostServiceTest {
   public void 전체데이터가져오기() {
     assertFalse(postRepository.findAll().isEmpty());
   }
-
-  @Test
-  public void 작성() {
-
-  }
 }

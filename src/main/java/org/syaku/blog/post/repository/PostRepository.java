@@ -10,6 +10,8 @@ import org.syaku.blog.post.domain.PostEntity;
  * @since 2018. 10. 9.
  */
 public interface PostRepository extends Repository<PostEntity, Long> {
-  PostEntity save(PostEntity postEntity);
   List<PostEntity> findAll();
+  PostEntity findById(long id);
+  PostEntity save(PostEntity postEntity);
+  void deleteById(long id);
 }

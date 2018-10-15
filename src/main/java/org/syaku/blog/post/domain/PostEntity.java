@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,13 +32,14 @@ public class PostEntity implements Post {
   private long id;
 
   @NotNull
-  @Column(nullable = false, length = 255)
+  @Column(nullable = false)
   private String subject;
 
   @Column
   @Lob
   private String contents;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
   @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private Date creationDate;
@@ -45,4 +47,9 @@ public class PostEntity implements Post {
   @Column
   @Temporal(TemporalType.TIMESTAMP)
   private Date modificationDate;
+
+  @PrePersist
+  public void before() {
+    this.creationDate = new Date();
+  }
 }
