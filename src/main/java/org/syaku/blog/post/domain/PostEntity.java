@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class PostEntity implements Post {
+public class PostEntity implements Post, Comparable<PostEntity> {
   @Id
   @Column(nullable = false)
   @SequenceGenerator(
@@ -39,6 +39,7 @@ public class PostEntity implements Post {
   @Lob
   private String contents;
 
+  @NotNull
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
   @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
@@ -51,5 +52,16 @@ public class PostEntity implements Post {
   @PrePersist
   public void before() {
     this.creationDate = new Date();
+  }
+
+  @Override
+  public int compareTo(PostEntity o) {
+    if (id > o.getId()) {
+      return 1;
+    } else if (id < o.getId()) {
+      return -1;
+    } else {
+      return 0;
+    }
   }
 }
