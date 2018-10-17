@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.syaku.blog.post.domain.Post;
@@ -42,6 +42,15 @@ public class PostService {
 
   public List<Post> getPostList(Sort sort) {
     return getImmutable(postRepository.findAll(sort));
+  }
+
+  public Page<Post> getPostPaging() {
+    return getPostPaging(PageRequest.of(0, 10, new Sort(Sort.Direction.DESC, "id")));
+  }
+
+  public Page<Post> getPostPaging(Pageable pageable) {
+    Page<PostEntity> page = postRepository.findAll(pageable);
+    return new PageImpl<>(getImmutable(page.getContent()), pageable, page.getTotalElements());
   }
 
   public Post save(PostEntity postEntity) {

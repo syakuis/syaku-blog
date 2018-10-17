@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
@@ -46,5 +47,13 @@ public class PostListTest {
 
     Post firstPost = posts.get(0);
     assertEquals(firstPost.getSubject(), "a999" );
+  }
+
+  @Test
+  public void 페이지네비게이션_테스트() {
+    Page<Post> pagePost = postService.getPostPaging();
+    assertEquals(pagePost.getTotalPages(), 100);
+    assertEquals(pagePost.getSize(), 10);
+    assertEquals(pagePost.getTotalElements(), 1000);
   }
 }
