@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.repository.PostRepository;
@@ -32,12 +33,19 @@ public class PostService {
       postEntities.stream().collect(Collectors.toList()));
   }
 
-  /**
-   * 포스트 전체 데이터를 불변 목록으로 반환한다.
-   * @return List
-   */
+  private Sort getSort() {
+      return new Sort(Sort.Direction.DESC, "id");
+  }
+
+  private Pageable getPageable() {
+    return getPageable(0);
+  }
+  private Pageable getPageable(int page) {
+    return PageRequest.of(page, 10, getSort());
+  }
+
   public List<Post> getPostList() {
-    return this.getPostList(new Sort(Sort.Direction.DESC, "id"));
+    return this.getPostList(getSort());
   }
 
   public List<Post> getPostList(Sort sort) {
@@ -45,11 +53,32 @@ public class PostService {
   }
 
   public Page<Post> getPostPaging() {
-    return getPostPaging(PageRequest.of(0, 10, new Sort(Sort.Direction.DESC, "id")));
+    return getPostPaging(getPageable());
+  }
+
+  public Page<Post> getPostPaging(int page) {
+    return getPostPaging(getPageable(page));
   }
 
   public Page<Post> getPostPaging(Pageable pageable) {
     Page<PostEntity> page = postRepository.findAll(pageable);
+    return new PageImpl<>(getImmutable(page.getContent()), pageable, page.getTotalElements());
+  }
+
+  public Page<Post> getSearchPostPaging(String subject) {
+    return getSearchPostPaging(subject, getPageable());
+  }
+
+  public Page<Post> getSearchPostPaging(String subject, int page) {
+    return getSearchPostPaging(subject, getPageable(page));
+  }
+
+  public Page<Post> getSearchPostPaging(String subject, Pageable pageable) {
+    if (StringUtils.isEmpty(subject)) {
+      return new PageImpl<>(Collections.emptyList(), pageable, 0);
+    }
+
+    Page<PostEntity> page = postRepository.findAllBySubjectContaining(subject, pageable);
     return new PageImpl<>(getImmutable(page.getContent()), pageable, page.getTotalElements());
   }
 

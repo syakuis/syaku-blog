@@ -35,8 +35,12 @@ public class PostListTest {
    */
   @Before
   public void setup() {
+    StringBuilder stringBuilder = new StringBuilder();
     for (int i = 0; i < 1000; i++) {
-      postService.save(PostEntity.builder().subject("a"+i).contents("내용").build());
+      postService.save(PostEntity.builder()
+        .subject(stringBuilder.append("a").append(i).append(i % 2 == 0 ? "search" : "").toString())
+        .contents("내용").build());
+      stringBuilder.setLength(0);
     }
   }
 
@@ -55,5 +59,13 @@ public class PostListTest {
     assertEquals(pagePost.getTotalPages(), 100);
     assertEquals(pagePost.getSize(), 10);
     assertEquals(pagePost.getTotalElements(), 1000);
+  }
+
+  @Test
+  public void 제목_검색_테스트() {
+    Page<Post> pagePost = postService.getSearchPostPaging("search");
+    assertEquals(pagePost.getSize(), 10);
+    assertEquals(pagePost.getTotalElements(), 500);
+    assertEquals(pagePost.getTotalPages(), 50);
   }
 }

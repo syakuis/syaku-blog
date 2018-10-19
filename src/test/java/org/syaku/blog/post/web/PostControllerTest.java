@@ -6,12 +6,9 @@ package org.syaku.blog.post.web;
  */
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,40 +41,50 @@ public class PostControllerTest {
   public void setup() {
     assertNotNull(postService);
     objectMapper = new ObjectMapper();
+
+    postService.save(PostEntity.builder().subject("제목").contents("내용").build());
   }
 
   @Test
-  public void test() throws Exception {
-    // 쓰기 테스트
+  public void 쓰기() throws Exception {
     this.mvc.perform(
       post("/post")
-        .content(objectMapper.writeValueAsString(PostEntity.builder().subject("제목").contents("내용").build()))
+        .content(objectMapper.writeValueAsString(
+          PostEntity.builder().subject("쓰기_제목").contents("쓰기_내용").build()))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
     )
+      .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE)))
-      .andExpect(status().isOk());
+      .andExpect(jsonPath("$.subject").value("쓰기_제목"))
+      .andExpect(jsonPath("$.contents").value("쓰기_내용"));
+  }
 
-    List<Post> posts = postService.getPostList();
-
-    // 목록 테스트
+  @Test
+  public void 목록() throws Exception {
     this.mvc.perform(
       get("/post")
     )
+      .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE)))
-      .andExpect(content().json(objectMapper.writeValueAsString(posts)))
-      .andExpect(status().isOk());
+      .andExpect(content().json(objectMapper.writeValueAsString(postService.getPostPaging())));
+  }
 
+  @Test
+  public void 보기() throws Exception {
     Post post = postService.getPost(1);
 
-    // 보기 테스트
     this.mvc.perform(get("/post/{id}", 1))
+      .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE)))
-      .andExpect(content().json(objectMapper.writeValueAsString(post)))
-      .andExpect(status().isOk());
+      .andExpect(content().json(objectMapper.writeValueAsString(post)));
+  }
 
+  @Test
+  public void 삭제() throws Exception {
+    assertNotNull(postService.getPost(1));
     this.mvc.perform(delete("/post/{id}", 1))
       .andExpect(status().isOk());
 
-    assertTrue(postService.getPostList().isEmpty());
+    assertNull(postService.getPost(1));
   }
 }

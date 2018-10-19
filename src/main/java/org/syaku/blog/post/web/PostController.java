@@ -1,8 +1,7 @@
 package org.syaku.blog.post.web;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
@@ -19,8 +18,16 @@ public class PostController {
   private PostService postService;
 
   @GetMapping("")
-  public List<Post> list() {
-    return postService.getPostList();
+  public Page<Post> list(
+    @RequestParam(name = "page", defaultValue = "0", required = false) int page) {
+    return postService.getPostPaging(page);
+  }
+
+  @GetMapping(value = "", params = "subject")
+  public Page<Post> search(
+    @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+    @RequestParam(name = "subject", defaultValue = "", required = false) String subject) {
+    return postService.getSearchPostPaging(subject, page);
   }
 
   @GetMapping("/{id}")
