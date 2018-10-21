@@ -7,8 +7,11 @@ package org.syaku.blog.post.web;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Base64;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,18 +40,28 @@ public class PostControllerTest {
   @Autowired
   private PostService postService;
 
+  String authorization = "Authorization";
+  String username = "admin";
+  String password = "1234";
+  String token;
+
   @Before
   public void setup() {
     assertNotNull(postService);
     objectMapper = new ObjectMapper();
 
     postService.save(PostEntity.builder().subject("제목").contents("내용").build());
+
+    String token = username + ":" + password;
+    this.token = "Basic " + Base64.getEncoder().encodeToString(token.getBytes());
   }
 
   @Test
   public void 쓰기() throws Exception {
     this.mvc.perform(
       post("/post")
+        .header(authorization, this.token)
+        .with(csrf())
         .content(objectMapper.writeValueAsString(
           PostEntity.builder().subject("쓰기_제목").contents("쓰기_내용").build()))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))

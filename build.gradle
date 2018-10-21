@@ -46,8 +46,9 @@ repositories {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-web")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+  compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
   testCompile "junit:junit:4.12"
   testCompile "org.jmock:jmock-junit4:2.8.2"
@@ -60,4 +61,9 @@ dependencies {
 
   compile "org.springframework.boot:spring-boot-starter-data-jpa"
   compile "com.h2database:h2"
+
+  compile "org.springframework.boot:spring-boot-starter-security"
+  testCompile "org.springframework.security:spring-security-test"
 }
+
+compileJava.dependsOn(processResources)
