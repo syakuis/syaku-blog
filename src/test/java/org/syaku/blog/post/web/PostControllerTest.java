@@ -11,8 +11,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.Base64;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
+import org.syaku.blog.security.TestAuthenticationToken;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,28 +39,19 @@ public class PostControllerTest {
   @Autowired
   private PostService postService;
 
-  String authorization = "Authorization";
-  String username = "admin";
-  String password = "1234";
-  String token;
-
   @Before
   public void setup() {
     assertNotNull(postService);
     objectMapper = new ObjectMapper();
 
     postService.save(PostEntity.builder().subject("제목").contents("내용").build());
-
-    String token = username + ":" + password;
-    this.token = "Basic " + Base64.getEncoder().encodeToString(token.getBytes());
   }
 
   @Test
   public void 쓰기() throws Exception {
     this.mvc.perform(
       post("/post")
-        .header(authorization, this.token)
-        .with(csrf())
+        .headers(TestAuthenticationToken.getBasicAuthentication()).with(csrf())
         .content(objectMapper.writeValueAsString(
           PostEntity.builder().subject("쓰기_제목").contents("쓰기_내용").build()))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -95,7 +85,9 @@ public class PostControllerTest {
   @Test
   public void 삭제() throws Exception {
     assertNotNull(postService.getPost(1));
-    this.mvc.perform(delete("/post/{id}", 1))
+    this.mvc.perform(delete("/post/{id}", 1)
+      .headers(TestAuthenticationToken.getBasicAuthentication()).with(csrf())
+    )
       .andExpect(status().isOk());
 
     assertNull(postService.getPost(1));

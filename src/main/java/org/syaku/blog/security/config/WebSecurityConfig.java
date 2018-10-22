@@ -1,6 +1,5 @@
 package org.syaku.blog.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,9 +22,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  @Autowired
-  private SecurityProperties securityProperties;
-
   @Bean
   public UserDetailsService userDetailsService() {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -61,14 +57,13 @@ public class WebSecurityConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       http
-//        .httpBasic().disable()
         .authorizeRequests()
-        .antMatchers(HttpMethod.POST, "/post").hasRole("USER")
-        .anyRequest()
-        .authenticated()
+        .antMatchers(HttpMethod.POST, "/post/*").hasRole("USER")
+        .antMatchers(HttpMethod.DELETE, "/post/*").hasRole("USER")
+        .anyRequest().permitAll()
         .and()
         .addFilterAt(basicAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
-        .csrf();
+        .csrf().disable();
     }
   }
 }
