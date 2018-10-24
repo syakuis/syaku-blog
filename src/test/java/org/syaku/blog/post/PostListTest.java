@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
 
@@ -46,16 +45,16 @@ public class PostListTest {
 
   @Test
   public void 등록_내림차순_정렬_테스트() {
-    List<Post> posts = postService.getPostList();
+    List<PostEntity> posts = postService.getPostList();
     assertTrue(posts.size() == 1000);
 
-    Post firstPost = posts.get(0);
+    PostEntity firstPost = posts.get(0);
     assertEquals(firstPost.getSubject(), "a999" );
   }
 
   @Test
   public void 페이지네비게이션_테스트() {
-    Page<Post> pagePost = postService.getPostPaging();
+    Page<PostEntity> pagePost = postService.getPostPaging();
     assertEquals(pagePost.getTotalPages(), 100);
     assertEquals(pagePost.getSize(), 10);
     assertEquals(pagePost.getTotalElements(), 1000);
@@ -63,7 +62,7 @@ public class PostListTest {
 
   @Test
   public void 제목_검색_테스트() {
-    Page<Post> pagePost = postService.getSearchPostPaging("search");
+    Page<PostEntity> pagePost = postService.getSearchPostPaging("search");
     assertEquals(pagePost.getSize(), 10);
     assertEquals(pagePost.getTotalElements(), 500);
     assertEquals(pagePost.getTotalPages(), 50);

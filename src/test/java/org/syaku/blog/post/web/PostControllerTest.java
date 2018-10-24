@@ -11,6 +11,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.syaku.blog.post.domain.Post;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
 import org.syaku.blog.security.TestAuthenticationToken;
@@ -43,6 +45,8 @@ public class PostControllerTest {
   public void setup() {
     assertNotNull(postService);
     objectMapper = new ObjectMapper();
+    objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    objectMapper.registerModule(new JavaTimeModule());
 
     postService.save(PostEntity.builder().subject("제목").contents("내용").build());
   }
@@ -74,12 +78,13 @@ public class PostControllerTest {
 
   @Test
   public void 보기() throws Exception {
-    Post post = postService.getPost(1);
+    PostEntity post = postService.getPost(1);
+    String json = objectMapper.writeValueAsString(post);
 
     this.mvc.perform(get("/post/{id}", 1))
       .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE)))
-      .andExpect(content().json(objectMapper.writeValueAsString(post)));
+      .andExpect(content().json(json));
   }
 
   @Test
