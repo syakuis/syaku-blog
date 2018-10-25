@@ -3,7 +3,6 @@ package org.syaku.blog.user.domain;
 import java.sql.Timestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -22,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-public class UserEntity implements User {
+public class UserEntity {
   @Id
   @Column(nullable = false)
   @SequenceGenerator(
@@ -33,18 +32,15 @@ public class UserEntity implements User {
   private Long id;
 
   @Column(nullable = false, unique = true)
-  @NotNull
   private String username;
 
   @Column(nullable = false)
-  @NotNull
   private String password;
 
   @Column(nullable = false, unique = true)
-  @NotNull
   private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = false, updatable = false)
   @CreationTimestamp
   private Timestamp creationDateTime;
 }

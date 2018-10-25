@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.syaku.blog.user.domain.User;
 import org.syaku.blog.user.domain.UserEntity;
 
 @RunWith(SpringRunner.class)
@@ -31,7 +30,7 @@ public class UserServiceTest {
 
   @Test
   public void 사용자등록() {
-    User user = userService.signup(UserEntity.builder()
+    UserEntity user = userService.saveUser(UserEntity.builder()
       .username("admin").password("1234").email("syaku@naver.com").build());
 
     assertEquals(user, userService.getUserByUsername("admin"));
@@ -40,10 +39,10 @@ public class UserServiceTest {
 
   @Test(expected = PersistenceException.class)
   public void 사용자중복검사() {
-    userService.signup(UserEntity.builder()
+    userService.saveUser(UserEntity.builder()
       .username("test").password("1234").email("test@naver.com").build());
 
-    userService.signup(UserEntity.builder()
+    userService.saveUser(UserEntity.builder()
       .username("test").password("1234").email("test@naver.com").build());
 
     entityManager.flush();

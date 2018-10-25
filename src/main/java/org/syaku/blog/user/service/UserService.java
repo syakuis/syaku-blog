@@ -4,7 +4,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.syaku.blog.user.domain.User;
 import org.syaku.blog.user.domain.UserEntity;
 import org.syaku.blog.user.repository.UserRepository;
 
@@ -22,11 +21,16 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public User signup(UserEntity userEntity) {
+  /**
+   * 사용자 등록 및 수정
+   * @param userEntity
+   * @return UserEntity
+   */
+  public UserEntity saveUser(UserEntity userEntity) {
     return userRepository.save(userEntity);
   }
 
-  public User getUserByUsername(String username) {
+  public UserEntity getUserByUsername(String username) {
     return userRepository.findOneByUsername(username);
   }
 }
