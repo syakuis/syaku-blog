@@ -1,15 +1,16 @@
 package org.syaku.blog.post.domain;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
@@ -20,8 +21,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Setter(AccessLevel.NONE)
 @Builder
-public class PostEntity implements Post, Comparable<PostEntity> {
+public class PostEntity implements Comparable<PostEntity> {
   @Id
   @Column(nullable = false)
   @SequenceGenerator(
@@ -31,7 +33,6 @@ public class PostEntity implements Post, Comparable<PostEntity> {
   @GeneratedValue(generator = "POST_ID_GEN", strategy = GenerationType.SEQUENCE)
   private long id;
 
-  @NotNull
   @Column(nullable = false)
   private String subject;
 
@@ -39,20 +40,13 @@ public class PostEntity implements Post, Comparable<PostEntity> {
   @Lob
   private String contents;
 
-  @NotNull
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
-  @Column(nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date creationDate;
+  @Column(name = "CREATION_DATETIME", nullable = false, updatable = false)
+  @CreationTimestamp
+  private LocalDateTime creationDateTime;
 
-  @Column
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date modificationDate;
-
-  @PrePersist
-  public void before() {
-    this.creationDate = new Date();
-  }
+  @Column(name = "MODIFICATION_DATETIME")
+  @UpdateTimestamp
+  private LocalDateTime modificationDateTime;
 
   @Override
   public int compareTo(PostEntity o) {
