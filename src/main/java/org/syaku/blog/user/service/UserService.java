@@ -21,16 +21,19 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  /**
-   * 사용자 등록 및 수정
-   * @param userEntity
-   * @return UserEntity
-   */
+  public long getCountUser() {
+    return userRepository.count();
+  }
+
   public UserEntity saveUser(UserEntity userEntity) {
     return userRepository.save(userEntity);
   }
 
   public UserEntity getUserByUsername(String username) {
     return userRepository.findOneByUsername(username);
+  }
+
+  public void deleteUserByUsername(String username) {
+    userRepository.deleteByUsername(username);
   }
 }

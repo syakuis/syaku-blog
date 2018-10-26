@@ -10,4 +10,6 @@ import org.syaku.blog.user.domain.UserEntity;
 public interface UserRepository extends Repository<UserEntity, Long> {
   UserEntity findOneByUsername(String username);
   UserEntity save(UserEntity userEntity);
+  void deleteByUsername(String username);
+  long count();
 }

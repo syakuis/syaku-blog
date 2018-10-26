@@ -9,8 +9,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,18 @@ import org.syaku.blog.user.domain.UserEntity;
 @SpringBootTest
 @Transactional
 public class UserServiceTest {
-  @Autowired
+  @PersistenceContext
   private EntityManager entityManager;
   @Autowired
   private UserService userService;
+
+  private UserEntity userEntity;
+
+  @Before
+  public void setup() {
+    userEntity = userService.saveUser(UserEntity.builder()
+      .username("test").password("1234").email("test@naver.com").build());
+  }
 
   @Test
   public void 사용자등록() {
@@ -42,9 +52,22 @@ public class UserServiceTest {
     userService.saveUser(UserEntity.builder()
       .username("test").password("1234").email("test@naver.com").build());
 
-    userService.saveUser(UserEntity.builder()
-      .username("test").password("1234").email("test@naver.com").build());
-
     entityManager.flush();
+  }
+
+  @Test
+  public void 사용자수정() {
+    userEntity.setPassword("3333");
+    userEntity = userService.saveUser(userEntity);
+
+    assertEquals(userEntity, userService.getUserByUsername(userEntity.getUsername()));
+    assertSame(userEntity, userService.getUserByUsername(userEntity.getUsername()));
+  }
+
+  @Test
+  public void 사용자삭제() {
+    userService.deleteUserByUsername(userEntity.getUsername());
+
+    assertEquals(userService.getCountUser(), 0);
   }
 }

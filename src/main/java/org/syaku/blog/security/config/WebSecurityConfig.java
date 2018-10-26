@@ -1,5 +1,7 @@
 package org.syaku.blog.security.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,15 +24,28 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  @Bean
-  public UserDetailsService userDetailsService() {
-    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-    manager.createUser(User.withDefaultPasswordEncoder().username("admin").password("1234").roles("USER").build());
-    return manager;
+  private UserDetailsService userDetailsService;
+
+  @Autowired
+  public void setUserDetailsService(@Qualifier("userDetailsService") UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
   }
 
+//  @Bean
+//  public UserDetailsService userDetailsService() {
+//    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//    manager.createUser(User.withDefaultPasswordEncoder().username("admin").password("1234").roles("USER").build());
+//    return manager;
+//  }
+
   @Configuration
-  protected static class Security extends WebSecurityConfigurerAdapter {
+  static class Security extends WebSecurityConfigurerAdapter {
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+      return super.authenticationManagerBean();
+    }
 
     /**
      * 보안 시작지점. 권한이 없는 지 판단하여 페이지를 이동한다.
@@ -62,7 +77,7 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.DELETE, "/post/*").hasRole("USER")
         .anyRequest().permitAll()
         .and()
-        .addFilterAt(basicAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
+        .addFilterAt(basicAuthenticationFilter(authenticationManagerBean()), BasicAuthenticationFilter.class)
         .csrf().disable();
     }
   }
