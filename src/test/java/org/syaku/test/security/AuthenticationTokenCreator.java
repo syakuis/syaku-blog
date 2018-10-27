@@ -1,5 +1,6 @@
-package org.syaku.blog.security;
+package org.syaku.test.security;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.Base64Utils;
 
@@ -7,10 +8,14 @@ import org.springframework.util.Base64Utils;
  * @author Seok Kyun. Choi. 최석균 (Syaku)
  * @since 22/10/2018
  */
-public class TestAuthenticationToken {
-  public static HttpHeaders getBasicAuthentication() {
+@AllArgsConstructor
+public class AuthenticationTokenCreator {
+  private final String username;
+  private final String password;
+
+  public HttpHeaders basic() {
     HttpHeaders httpHeaders = new HttpHeaders();
-    String token = "admin:1234";
+    String token = username + ":" + password;
     httpHeaders.add("Authorization", "Basic " + Base64Utils.encodeToString(token.getBytes()));
     return httpHeaders;
   }

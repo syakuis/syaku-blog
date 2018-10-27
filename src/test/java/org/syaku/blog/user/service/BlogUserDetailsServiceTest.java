@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.syaku.blog.user.domain.UserEntity;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BlogUserDetailsServiceTest {
@@ -31,7 +33,7 @@ public class BlogUserDetailsServiceTest {
   }
 
   @Test
-  public void 로그인() {
-    UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
+  public void 사용자조회() {
+    assertEquals(userDetailsService.loadUserByUsername("admin").getUsername(), "admin");
   }
 }

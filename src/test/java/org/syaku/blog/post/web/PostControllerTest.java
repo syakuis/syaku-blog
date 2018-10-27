@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,17 +20,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
-import org.syaku.blog.security.TestAuthenticationToken;
+import org.syaku.test.security.AuthenticationTokenCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(username = "admin", roles = "USER")
 public class PostControllerTest {
   private ObjectMapper objectMapper;
 
@@ -41,6 +43,8 @@ public class PostControllerTest {
   @Autowired
   private PostService postService;
 
+  private AuthenticationTokenCreator authenticationTokenCreator;
+
   @Before
   public void setup() {
     assertNotNull(postService);
@@ -49,13 +53,15 @@ public class PostControllerTest {
     objectMapper.registerModule(new JavaTimeModule());
 
     postService.save(PostEntity.builder().subject("제목").contents("내용").build());
+
+    authenticationTokenCreator = new AuthenticationTokenCreator("admin", "1234");
   }
 
   @Test
   public void 쓰기() throws Exception {
     this.mvc.perform(
       post("/post")
-        .headers(TestAuthenticationToken.getBasicAuthentication()).with(csrf())
+        .headers(authenticationTokenCreator.basic()).with(csrf())
         .content(objectMapper.writeValueAsString(
           PostEntity.builder().subject("쓰기_제목").contents("쓰기_내용").build()))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -91,7 +97,7 @@ public class PostControllerTest {
   public void 삭제() throws Exception {
     assertNotNull(postService.getPost(1));
     this.mvc.perform(delete("/post/{id}", 1)
-      .headers(TestAuthenticationToken.getBasicAuthentication()).with(csrf())
+      .headers(authenticationTokenCreator.basic()).with(csrf())
     )
       .andExpect(status().isOk());
 

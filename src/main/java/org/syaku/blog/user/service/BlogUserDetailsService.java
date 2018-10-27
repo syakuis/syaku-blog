@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.syaku.blog.user.domain.UserEntity;
 import org.syaku.blog.user.repository.UserRepository;
 
-import com.sun.tools.javac.util.List;
+import java.util.Arrays;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
@@ -35,6 +35,6 @@ public class BlogUserDetailsService implements UserDetailsService {
     }
 
     return new User(
-      userEntity.getUsername(), userEntity.getPassword(), List.of(new SimpleGrantedAuthority("USER")));
+      userEntity.getUsername(), userEntity.getPassword(), Arrays.asList(new SimpleGrantedAuthority("USER")));
   }
 }

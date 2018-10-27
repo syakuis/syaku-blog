@@ -15,6 +15,7 @@ import lombok.Data;
 @PropertySource("classpath:org/syaku/blog/security/config/security.properties")
 @Data
 public class SecurityProperties {
+  private boolean enableCsrf;
   private String usernameParameter;
   private String passwordParameter;
   private String loginUrl;

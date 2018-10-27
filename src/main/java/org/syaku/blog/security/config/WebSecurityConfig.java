@@ -26,6 +26,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class WebSecurityConfig {
   private UserDetailsService userDetailsService;
 
+
   @Autowired
   public void setUserDetailsService(@Qualifier("userDetailsService") UserDetailsService userDetailsService) {
     this.userDetailsService = userDetailsService;
@@ -40,6 +41,13 @@ public class WebSecurityConfig {
 
   @Configuration
   static class Security extends WebSecurityConfigurerAdapter {
+    private SecurityProperties securityProperties;
+
+    @Autowired
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+      this.securityProperties = securityProperties;
+    }
+
 
     @Bean
     @Override
@@ -71,14 +79,18 @@ public class WebSecurityConfig {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+      if (securityProperties.isEnableCsrf()) {
+        http.csrf();
+      } else {
+        http.csrf().disable();
+      }
       http
         .authorizeRequests()
         .antMatchers(HttpMethod.POST, "/post/*").hasRole("USER")
         .antMatchers(HttpMethod.DELETE, "/post/*").hasRole("USER")
         .anyRequest().permitAll()
         .and()
-        .addFilterAt(basicAuthenticationFilter(authenticationManagerBean()), BasicAuthenticationFilter.class)
-        .csrf().disable();
+        .addFilterAt(basicAuthenticationFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
     }
   }
 }
