@@ -1,4 +1,4 @@
-package org.syaku.blog.security.config;
+package org.syaku.blog.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Configuration
 @ConfigurationProperties(prefix = "blog.security")
-@PropertySource("classpath:org/syaku/blog/security/config/security.properties")
+@PropertySource("classpath:org/syaku/blog/config/security.properties")
 @Data
 public class SecurityProperties {
   private boolean enableCsrf;
