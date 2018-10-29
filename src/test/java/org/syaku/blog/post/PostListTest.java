@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +27,6 @@ import org.syaku.blog.post.service.PostService;
 public class PostListTest {
   @Autowired
   private PostService postService;
-
-  /**
-   * 여러 개의 포스트를 미리 등록하고 테스트한다.
-   */
-  @Before
-  public void setup() {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (int i = 0; i < 1000; i++) {
-      postService.save(PostEntity.builder()
-        .subject(stringBuilder.append("a").append(i).append(i % 2 == 0 ? "search" : "").toString())
-        .contents("내용").build());
-      stringBuilder.setLength(0);
-    }
-  }
 
   @Test
   public void 등록_내림차순_정렬_테스트() {

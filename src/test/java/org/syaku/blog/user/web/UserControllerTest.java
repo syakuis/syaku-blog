@@ -24,10 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.syaku.blog.user.domain.UserEntity;
 import org.syaku.blog.user.service.UserService;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,14 +33,9 @@ public class UserControllerTest {
 
   @Autowired
   private MockMvc mvc;
-  private ObjectMapper objectMapper;
 
   @Before
   public void setup() {
-    objectMapper = new ObjectMapper();
-    objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    objectMapper.registerModule(new JavaTimeModule());
-
     userService.saveUser(UserEntity.builder()
       .username("admin").password("1234").email("syaku@naver.com").build());
   }
