@@ -12,11 +12,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.syaku.blog.user.domain.UserEntity;
@@ -36,6 +38,12 @@ public class UserServiceTest {
   public void setup() {
     userEntity = userService.saveUser(UserEntity.builder()
       .username("test").password("1234").email("test@naver.com").build());
+  }
+
+  @After
+  @Rollback
+  public void exit() {
+
   }
 
   @Test
@@ -68,6 +76,6 @@ public class UserServiceTest {
   public void 사용자삭제() {
     userService.deleteUserByUsername(userEntity.getUsername());
 
-    assertEquals(userService.getCountUser(), 0);
+    assertEquals(userService.getUserByUsername(userEntity.getUsername()), null);
   }
 }

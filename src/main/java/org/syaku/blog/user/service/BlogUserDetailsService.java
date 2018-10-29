@@ -1,5 +1,7 @@
 package org.syaku.blog.user.service;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -10,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.syaku.blog.user.domain.UserEntity;
 import org.syaku.blog.user.repository.UserRepository;
-
-import java.util.Arrays;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)

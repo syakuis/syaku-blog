@@ -16,13 +16,4 @@ import lombok.Data;
 @Data
 public class SecurityProperties {
   private boolean enableCsrf;
-  private String usernameParameter;
-  private String passwordParameter;
-  private String loginUrl;
-  private String logoutUrl;
-  private String cookieName;
-  private boolean alwaysUseDefaultTargetUrl;
-  private String defaultTargetUrl;
-  private int maximumSessions;
-  private boolean exceptionIfMaximumExceeded;
 }
