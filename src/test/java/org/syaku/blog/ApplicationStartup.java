@@ -3,6 +3,7 @@ package org.syaku.blog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.syaku.blog.post.domain.PostEntity;
@@ -12,6 +13,7 @@ import org.syaku.blog.post.repository.PostRepository;
  * @author Seok Kyun. Choi. 최석균 (Syaku)
  * @since 29/10/2018
  */
+@Profile("post-data-initialize")
 @Component
 @Transactional
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {

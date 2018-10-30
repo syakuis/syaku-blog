@@ -49,10 +49,10 @@ public class UserServiceTest {
   @Test
   public void 사용자등록() {
     UserEntity user = userService.saveUser(UserEntity.builder()
-      .username("admin").password("1234").email("syaku@naver.com").build());
+      .username("syaku").password("1234").email("syaku@test.com").build());
 
-    assertEquals(user, userService.getUserByUsername("admin"));
-    assertSame(user, userService.getUserByUsername("admin"));
+    assertEquals(user, userService.getUserByUsername("syaku"));
+    assertSame(user, userService.getUserByUsername("syaku"));
   }
 
   @Test(expected = PersistenceException.class)

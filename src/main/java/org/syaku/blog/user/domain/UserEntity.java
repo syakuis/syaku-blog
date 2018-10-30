@@ -42,5 +42,5 @@ public class UserEntity {
 
   @Column(nullable = false, updatable = false)
   @CreationTimestamp
-  private Timestamp creationDateTime;
+  private Timestamp creationDatetime;
 }

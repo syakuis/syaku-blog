@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Base64;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +32,6 @@ public class UserControllerTest {
 
   @Autowired
   private MockMvc mvc;
-
-  @Before
-  public void setup() {
-    userService.saveUser(UserEntity.builder()
-      .username("admin").password("1234").email("syaku@naver.com").build());
-  }
 
   @After
   public void exit() {

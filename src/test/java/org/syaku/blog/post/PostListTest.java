@@ -16,13 +16,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.syaku.blog.ApplicationStartup;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("post-data-initialize")
 @Transactional
 public class PostListTest {
   @Autowired

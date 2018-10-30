@@ -37,13 +37,13 @@ public class PostEntity implements Comparable<PostEntity> {
   @Lob
   private String contents;
 
-  @Column(name = "CREATION_DATETIME", nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false)
   @CreationTimestamp
-  private LocalDateTime creationDateTime;
+  private LocalDateTime creationDatetime;
 
-  @Column(name = "MODIFICATION_DATETIME")
+  @Column
   @UpdateTimestamp
-  private LocalDateTime modificationDateTime;
+  private LocalDateTime modificationDatetime;
 
   @Override
   public int compareTo(PostEntity o) {
