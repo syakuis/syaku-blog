@@ -1,0 +1,16 @@
+= Blog Restful API Document
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[post]]
+== 글작성
+블로그에 글을 작성한다.
+
+=== 요청
+include::{snippets}/post/http-request.adoc[]
+=== 응답
+include::{snippets}/post/http-response.adoc[]

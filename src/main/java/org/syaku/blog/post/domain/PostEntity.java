@@ -41,8 +41,7 @@ public class PostEntity implements Comparable<PostEntity> {
   @CreationTimestamp
   private LocalDateTime creationDatetime;
 
-  @Column
-  @UpdateTimestamp
+  @Column(insertable = false)
   private LocalDateTime modificationDatetime;
 
   @Override
