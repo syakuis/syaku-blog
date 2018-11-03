@@ -1,12 +1,13 @@
 # 블로그 만들기 :: spring boot getting started
 
-**모든 글**
+## 모든글
 
-- [스프링 부트 개발 환경 설정 :: Spring boot](http://syaku.tistory.com/369)
-- [스프링 부트 블로그 만들기 #1 :: Spring boot](http://syaku.tistory.com/370)
-- [스프링 부트 블로그 만들기 #2 :: Spring boot](http://syaku.tistory.com/372)
-- [스프링 부트 시큐리티 설정과 사용자 인증 #1 :: Spring boot security](http://syaku.tistory.com/373)
-- [스프링 부트 자동 테스트 및 배포 환경 구현 :: Spring boot devOps](http://syaku.tistory.com/371)
+- [1. 스프링 부트 개발 환경 설정 :: Spring boot](http://syaku.tistory.com/369)
+- [2. 스프링 부트 블로그 만들기 #1 :: Spring boot](http://syaku.tistory.com/370)
+- [3. 스프링 부트 블로그 만들기 #2 :: Spring boot](http://syaku.tistory.com/372)
+- [4. 스프링 부트 시큐리티 설정과 사용자 인증 #1 :: Spring boot security](http://syaku.tistory.com/373)
+- [5. 코드 리팩토링과 Spring RestDocs 적용 :: Spring boot restDocs](http://syaku.tistory.com/374)
+- [6. 스프링 부트 자동 테스트 및 배포 환경 구현 :: Spring boot devOps](http://syaku.tistory.com/371)
 
 ## 할일
 
@@ -22,3 +23,4 @@
 - 사용자 관리
   - [x] 사용자 관리
   - [ ] 접근 제어 관리
+- [x] RestDocs 적용
