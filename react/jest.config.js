@@ -8,4 +8,7 @@ module.exports = {
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
+  moduleNameMapper: {
+    '^\\_(.*)$': '<rootDir>/src/$1',
+  },
 };
