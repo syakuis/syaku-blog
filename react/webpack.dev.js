@@ -50,6 +50,14 @@ module.exports = (env, args, config) =>
         historyApiFallback: true,
         contentBase: 'dist',
         open: true,
+        proxy: {
+          '/api': {
+            target: 'http://localhost:3000',
+            pathRewrite: { '^/api': '' },
+            secure: false,
+            prependPath: true,
+          },
+        },
       },
     },
     config,
