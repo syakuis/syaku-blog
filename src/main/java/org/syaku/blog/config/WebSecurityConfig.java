@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -46,6 +47,16 @@ public class WebSecurityConfig {
       return new BasicAuthenticationFilter(authenticationManager, authenticationEntryPoint());
     }
 
+    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter(
+      AuthenticationManager authenticationManager) {
+      UsernamePasswordAuthenticationFilter filter = new UsernamePasswordAuthenticationFilter();
+      filter.setUsernameParameter(securityProperties.getUsernameParameter());
+      filter.setPasswordParameter(securityProperties.getPasswordParameter());
+      filter.setFilterProcessesUrl(securityProperties.getLoginProcessingUrl());
+      filter.setAuthenticationManager(authenticationManager);
+      return filter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       if (securityProperties.isEnableCsrf()) {
@@ -60,7 +71,9 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.DELETE, "/post/*").hasRole("USER")
         .anyRequest().authenticated()
         .and()
-        .addFilterAt(basicAuthenticationFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
+        .addFilterAt(basicAuthenticationFilter(authenticationManagerBean()), BasicAuthenticationFilter.class)
+        .addFilterAt(usernamePasswordAuthenticationFilter(authenticationManagerBean()),
+          UsernamePasswordAuthenticationFilter.class);
     }
   }
 }

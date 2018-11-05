@@ -6,7 +6,9 @@ package org.syaku.blog.user.web;
  */
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Base64;
@@ -52,5 +54,13 @@ public class UserControllerTest {
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
     )
       .andExpect(status().isOk()).andExpect(jsonPath("$.username").value("admin"));
+  }
+
+  @Test
+  public void 사용자인증() throws Exception {
+    this.mvc.perform(post("/login")
+      .param("username", "admin")
+      .param("password", "1234")
+      .contentType(MediaType.APPLICATION_FORM_URLENCODED)).andExpect(redirectedUrl("/"));
   }
 }

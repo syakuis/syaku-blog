@@ -13,3 +13,4 @@ public interface UserRepository extends Repository<UserEntity, Long> {
   void deleteByUsername(String username);
   long count();
 }
+

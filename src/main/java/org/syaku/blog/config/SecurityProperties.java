@@ -16,4 +16,7 @@ import lombok.Data;
 @Data
 public class SecurityProperties {
   private boolean enableCsrf;
+  private String usernameParameter;
+  private String passwordParameter;
+  private String loginProcessingUrl;
 }
