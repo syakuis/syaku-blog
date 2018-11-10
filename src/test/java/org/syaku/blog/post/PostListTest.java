@@ -7,6 +7,7 @@ package org.syaku.blog.post;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.syaku.blog.ApplicationStartup;
 import org.syaku.blog.post.domain.PostEntity;
@@ -26,8 +28,7 @@ import org.syaku.blog.post.service.PostService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("post-data-initialize")
-@Transactional
+@TestExecutionListeners(listeners = PostListTestListener.class, mergeMode = MERGE_WITH_DEFAULTS)
 public class PostListTest {
   @Autowired
   private PostService postService;

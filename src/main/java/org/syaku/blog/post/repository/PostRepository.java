@@ -19,6 +19,7 @@ public interface PostRepository extends Repository<PostEntity, Long> {
   Page<PostEntity> findAllBySubjectContaining(String subject, Pageable pageable);
   PostEntity findById(long id);
   PostEntity save(PostEntity postEntity);
+  List<PostEntity> saveAll(Iterable<PostEntity> postEntities);
   void deleteById(long id);
-  void deleteAll();
+  void deleteAll(Iterable<PostEntity> postEntities);
 }

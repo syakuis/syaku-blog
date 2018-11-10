@@ -2,21 +2,21 @@ package org.syaku.blog.post.web;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.syaku.blog.ApplicationStartup;
+import org.syaku.blog.post.PostListTestListener;
 import org.syaku.blog.post.domain.PostEntity;
 import org.syaku.blog.post.service.PostService;
 
@@ -27,7 +27,7 @@ import org.syaku.blog.post.service.PostService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("post-data-initialize")
+@TestExecutionListeners(listeners = PostListTestListener.class, mergeMode = MERGE_WITH_DEFAULTS)
 public class PostListControllerTest {
   @Autowired
   private MockMvc mvc;

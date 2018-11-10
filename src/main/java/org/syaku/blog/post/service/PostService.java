@@ -82,11 +82,19 @@ public class PostService {
     return postRepository.save(postEntity);
   }
 
+  public List<PostEntity> save(List<PostEntity> postEntities) {
+    return postRepository.saveAll(postEntities);
+  }
+
   public PostEntity getPost(long id) {
     return postRepository.findById(id);
   }
 
   public void delete(long id) {
     postRepository.deleteById(id);
+  }
+
+  public void delete(List<PostEntity> postEntities) {
+    postRepository.deleteAll(postEntities);
   }
 }
