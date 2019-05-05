@@ -1,8 +1,8 @@
 buildscript {
   ext {
-    springBootVersion = "2.0.5.RELEASE"
+    springBootVersion = "2.1.2.RELEASE"
     lombokVersion = "1.18.2"
-    restDocsVersion = "2.0.2.RELEASE"
+    restDocsVersion = "2.0.3.RELEASE"
   }
 
   repositories {
@@ -25,12 +25,6 @@ apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "org.asciidoctor.convert"
 
-group "org.syaku"
-version "1.0.0.BUILD-SNAPSHOT"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 idea {
   module {
     inheritOutputDirs = true
@@ -39,8 +33,18 @@ idea {
   }
 }
 
-bootJar {
-  mainClassName = "org.syaku.blog.Application"
+wrapper {
+  gradleVersion = '5.4'
+}
+
+group "org.syaku"
+version "1.0.0.BUILD-SNAPSHOT"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext {
+  snippetsDir = file("build/generated-snippets")
 }
 
 repositories {
@@ -48,14 +52,21 @@ repositories {
   mavenCentral()
 }
 
-ext {
-  snippetsDir = file("build/generated-snippets")
+compileJava.dependsOn(processResources)
+
+configurations {
+  compile.exclude module: "spring-boot-starter-tomcat"
 }
 
 dependencies {
   implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation "org.springframework.boot:spring-boot-starter-webflux"
   testImplementation "org.springframework.boot:spring-boot-starter-test"
   compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+
+  compile "org.springframework.boot:spring-boot-starter-validation"
+
+  compile "org.springframework.boot:spring-boot-starter-jetty"
 
   testCompile "junit:junit:4.12"
   testCompile "org.jmock:jmock-junit4:2.8.2"
@@ -67,19 +78,15 @@ dependencies {
   testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
   compile "org.springframework.boot:spring-boot-starter-data-jpa"
-  compile "com.h2database:h2"
+
+  compileOnly "com.h2database:h2:1.4.191"
+  testCompile "com.h2database:h2:1.4.191"
 
   compile "org.springframework.boot:spring-boot-starter-security"
   testCompile "org.springframework.security:spring-security-test"
 
   asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${restDocsVersion}"
   testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:${restDocsVersion}"
-}
-
-compileJava.dependsOn(processResources)
-
-task wrapper(type: Wrapper) {
-  gradleVersion = "4.10.2"
 }
 
 test {
@@ -92,8 +99,11 @@ asciidoctor {
 }
 
 bootJar {
+  enabled = true
+  mainClassName = "org.syaku.blog.Application"
   dependsOn asciidoctor
   from ("${asciidoctor.outputDir}/html5") {
     into 'static/docs'
   }
+  launchScript()
 }
