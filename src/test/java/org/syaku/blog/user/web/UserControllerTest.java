@@ -5,6 +5,7 @@ package org.syaku.blog.user.web;
  * @since 25/10/2018
  */
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Base64;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,41 +25,26 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.syaku.blog.user.domain.UserEntity;
+import org.syaku.blog.user.repository.UserRepository;
 import org.syaku.blog.user.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserControllerTest {
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private MockMvc mvc;
-
-  @After
-  public void exit() {
-    userService.deleteUserByUsername("admin");
-  }
-
-  private String getToken(String username) {
-    UserEntity userEntity = userService.getUserByUsername(username);
-    String token = userEntity.getUsername() + ":" + userEntity.getPassword();
-    return "Basic " + Base64.getEncoder().encodeToString(token.getBytes());
-  }
+  @Autowired private MockMvc mvc;
 
   @Test
-  public void 사용자인증허가() throws Exception {
+  public void 일반인증() throws Exception {
     this.mvc.perform(
-      get("/user")
-        .header("Authorization", getToken("admin"))
+      get("/user").with(httpBasic("admin", "1234"))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
     )
-      .andExpect(status().isOk()).andExpect(jsonPath("$.username").value("admin"));
+      .andExpect(status().isOk());
   }
 
   @Test
-  public void 사용자인증() throws Exception {
+  public void 로그인인증() throws Exception {
     this.mvc.perform(post("/login")
       .param("username", "admin")
       .param("password", "1234")
