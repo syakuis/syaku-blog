@@ -35,19 +35,11 @@ public class UserControllerTest {
   @Autowired private MockMvc mvc;
 
   @Test
-  public void 일반인증() throws Exception {
+  public void 일반_인증() throws Exception {
     this.mvc.perform(
       get("/user").with(httpBasic("admin", "1234"))
         .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE))
     )
       .andExpect(status().isOk());
-  }
-
-  @Test
-  public void 로그인인증() throws Exception {
-    this.mvc.perform(post("/login")
-      .param("username", "admin")
-      .param("password", "1234")
-      .contentType(MediaType.APPLICATION_FORM_URLENCODED)).andExpect(redirectedUrl("/"));
   }
 }

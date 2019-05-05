@@ -1,15 +1,10 @@
 package org.syaku.blog.user.domain;
 
-import java.sql.Timestamp;
+import lombok.*;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
@@ -20,10 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
+@Getter
 public class UserEntity {
   @Id
-  @Column(nullable = false)
   @SequenceGenerator(
     name = "USER_ID_GEN",
     sequenceName = "USER_ID_SEQ",
@@ -31,16 +25,31 @@ public class UserEntity {
   @GeneratedValue(generator = "USER_ID_GEN", strategy = GenerationType.SEQUENCE)
   private Long id;
 
+  @NotBlank
   @Column(nullable = false, unique = true)
   private String username;
 
+  @Setter
+  @NotBlank
   @Column(nullable = false)
   private String password;
 
+  @NotBlank
   @Column(nullable = false, unique = true)
   private String email;
 
   @Column(nullable = false, updatable = false)
-  @CreationTimestamp
-  private Timestamp creationDatetime;
+  private LocalDateTime creationDatetime;
+
+  @Column(insertable = false)
+  private LocalDateTime modificationDatetime;
+
+  @PrePersist
+  protected void onPersist() {
+    this.creationDatetime = LocalDateTime.now();
+  }
+  @PreUpdate
+  protected void onUpdate() {
+    this.modificationDatetime = LocalDateTime.now();
+  }
 }
