@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+      {
+          "name": "react blog project",
+          "type": "chrome",
+          "request": "launch",
+          "url": "http://localhost:8080/",
+          "sourceMaps": true,
+          "webRoot": "${workspaceRoot}",
+          "sourceMapPathOverrides": {
+              "webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+              "webpack:///*": "${workspaceRoot}/*",
+          },
+        //   "preLaunchTask": "build",
+      }
+  ]
+}
